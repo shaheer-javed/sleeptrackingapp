@@ -4,6 +4,8 @@ const path = require('path');
 const db = require('./db.js')
 const login = require('./login.js')
 const register = require('./register.js')
+const dashboard = require('./dashboard.js')
+
 
 const app = express();
 app.use(session({
@@ -17,14 +19,16 @@ app.use(express.urlencoded({ extended: true }));
 // extended is an option allowing you to choose which library you want to use to parse the URL encoded data. By default, this option is set to true and will use the qs library. When set to false,it uses the QueryString library.
 app.use(express.static(path.join(__dirname, 'static')));
 
+app.set('view engine', 'ejs') // need to place all ejs files in views folder
+
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname + '/login.html'));
 })
 app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname + '/register.html'));
 })
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname + '/dashboard/dashboard.html'));
+app.get('/addtime', (req, res) => {
+    res.sendFile(path.join(__dirname + '/addtime.html'));
 })
 
 //static file
@@ -34,6 +38,8 @@ app.use('/reg-auth', register);
 
 app.use('/log-auth', login);
 
+app.use('/', dashboard);
+
 app.get('/home', (req, res) => {
     if (req.session.loggedin) {
         res.send("Welcome," + req.session.username + '!!');
@@ -41,14 +47,6 @@ app.get('/home', (req, res) => {
         res.send('Please login or register to view page!!');
     }
 });
-
-
-
-
-
-
-
-
 
 
 app.listen(5000, () => {
