@@ -1,29 +1,30 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./db.js')
+const Sequelize = require('sequelize');
+const sequelize = require('./db')
+const User = require('./models/user');
 
-router.post('/', (req, res) => {
+router.post('/', async(req, res) => {
 
     let username = req.body.username;
     let password = req.body.password;
 
-    if (username && password) {
+    const existedUser = await User.findOne({
+        where: {
+            password: req.body.password,
+            username: req.body.username
+        } // can use the op.and method but comma(,) works same as and
+    }).catch((err) => {
+        console.log('Error:', err)
+    });
 
-        db.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], (error, result, fields) => {
-            if (error) throw error;
-            if (result.length > 0) {
-                req.session.loggedin = true;
-                req.session.username = username;
-                res.redirect('/home');
-            } else {
-                res.send('Incorrect Username or Password!')
-            }
-            res.end();
-        });
-    } else {
-        res.send('Enter Username and Password');
-        res.end();
+    if (!existedUser) {
+        return res.json({ message: 'Login info Is not correct!!!!!' })
     }
+
+    return res.json({ message: 'login sucessfull' })
+
+
 });
 
 module.exports = router

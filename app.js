@@ -1,11 +1,13 @@
 const express = require('express');
 const session = require('express-session');
+const Sequelize = require('sequelize');
+const sequelize = require('./db')
 const path = require('path');
-const db = require('./db.js')
 const login = require('./login.js')
 const register = require('./register.js')
 const dashboard = require('./dashboard.js')
-
+const User = require('./models/user');
+const time = require('./models/time');
 
 const app = express();
 app.use(session({
@@ -48,6 +50,16 @@ app.get('/home', (req, res) => {
     }
 });
 
+
+User.hasMany(time);
+time.belongsTo(User);
+//{ force: true } use this in sync to commit changes forcely in db
+sequelize.sync().then((result) => {
+    //console.log(result);
+
+}).catch((err) => {
+    console.log(err);
+});
 
 app.listen(5000, () => {
     console.log('app is running on port 5000')

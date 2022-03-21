@@ -1,16 +1,9 @@
-const mysql = require('mysql');
-
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'sleeptracker',
-    //port : 3306 port 3306 is default thats why we dont set itother =wise we need to specify the port
-});
-
-db.connect((err) => {
-    if (err) throw err;
-    console.log('database connected');
-})
-
-module.exports = db
+const Sequelize = require("sequelize")
+const sequelize = new Sequelize('ormsleeptracker', 'root', '', { host: 'localhost', dialect: 'mysql' });
+try {
+    sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+} catch (error) {
+    console.error('Unable to connect to the database:', error);
+}
+module.exports = sequelize;
