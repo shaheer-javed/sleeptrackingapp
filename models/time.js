@@ -8,6 +8,10 @@ const timedata = sequelize.define("timedata", {
         allowNull: false,
         primaryKey: true
     },
+    date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false
+    },
     sleeptime: {
         type: Sequelize.TIME,
         allowNull: false
@@ -17,7 +21,11 @@ const timedata = sequelize.define("timedata", {
         allowNull: false
     },
     totaltime: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    timeDiff: {
+        type: Sequelize.FLOAT,
         allowNull: false
     }
 });
